@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: catpp-spring-boot-actuator
+
+server:
+  port: 8085
+
+# 管理节点配置
+management:
+  endpoints:
+    web:
+      # actuator的前缀地址
+      basePath: /
+  # 显示详细健康状态
+  endpoint:
+    health:
+      showDetails: always
