@@ -129,3 +129,76 @@ basePath字段位于WebEndpointProperties属性配置类内，修改完成重启
 
 ## 总结
 spring-boot-actuator默认开放了health、info两个节点，通过配置健康检查详细信息可以查看硬盘相关的运行健康状态。
+
+
+------------------------------------------------------------------------------------------------------------------------
+# 了解Actuator开放指定监控节点：
+
+## 学习目标：开放spring-boot-actuator的指定节点访问。
+
+## 开放指定节点
+management.endpoints.web.exposure.include的配置字段我们已经了解到了在
+org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties属性配置类内，而且exposure.include的值默认为["health","info"]。
+除此之外通过spring-configuration-metadata.json元数据配置文件内还知道了management.endpoints.web.exposure.include配置参数
+的类型为java.util.Set<java.lang.String>，这样我们就知道了该如何进行修改配置了，修改application.yml配置文件如下所示：
+    # 管理节点配置
+    management:
+      endpoints:
+        web:
+          # actuator的前缀地址
+          base-path: /
+          # 开放指定节点
+          exposure:
+            include:
+              - health
+              - info
+              - mappings
+              - env
+由于management.endpoints.web.exposure.include是java.util.Set<java.lang.String>类型，那么我就可以采用中横线换行形式进行配
+置(这是SpringBoot采用yaml配置文件风格的约定)，一个"- xxx"代表一个配置的值。
+当然我们采用数组的形式也是可以的，如下所示：
+    # 管理节点配置
+    management:
+      endpoints:
+        web:
+          # actuator的前缀地址
+          base-path: /
+          # 开放指定节点
+          exposure:
+            include: ["health","info","mappings","env"]
+
+
+## 开放全部节点
+如果不做节点的开放限制，可以将management.endpoints.web.exposure.include配置为*，那么这样就可以开放全部的对外监控的节点，如下所示：
+    # 管理节点配置
+    management:
+      endpoints:
+        web:
+          # actuator的前缀地址
+          base-path: /
+          # 开放指定节点
+          exposure:
+            include: "*"
+
+## 内置节点列表
+开放全部节点后在项目启动时，控制台会打印已经映射的路径列表，spring-boot-actuator内置了丰富的常用监控节点，详见如下表格：
+节点	        节点描述	                                                                                是否默认启用
+auditevents	    公开当前应用程序的审核事件信息。	                                                        是
+beans	        显示应用程序中所有Spring bean的完整列表。	                                                是
+conditions	    显示在配置和自动配置类上评估的条件以及它们匹配或不匹配的原因。	                            是
+configprops	    显示所有的整理列表@ConfigurationProperties。	                                            是
+env	            露出Spring的属性ConfigurableEnvironment。	                                                是
+health	        显示应用健康信息。	                                                                        是
+httptrace	    显示HTTP跟踪信息（默认情况下，最后100个HTTP请求 - 响应交换）。	                            是
+info	        显示任意应用信息。	                                                                        是
+loggers	        显示和修改应用程序中记录器的配置。	                                                        是
+metrics	        显示当前应用程序的“指标”信息。	                                                        是
+mappings	    显示所有@RequestMapping路径的整理列表。	                                                    是
+scheduledtasks	显示应用程序中的计划任务。	                                                                是
+shutdown	    允许应用程序正常关闭。	                                                                    否
+threaddump	    执行线程转储。	                                                                            是
+sessions	    允许从Spring Session支持的会话存储中检索和删除用户会话。使用Spring Session对响应式Web应用程序的支持时不可用。	是
+
+## 总结
+通过本章学习可以知道你需要开发的节点了，根据具体的业务需求开放不同的节点。
+注意：节点开放一定要慎重，不要过度开放接口，也不要盲目填写*开放全部节点。

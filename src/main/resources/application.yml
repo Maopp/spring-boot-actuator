@@ -11,6 +11,18 @@ management:
     web:
       # actuator的前缀地址
       basePath: /
+      # 开放指定节点
+      exposure:
+        # 数组形式
+        # include: ["health", "info", "mappings", "env"]
+        # yaml文件配置字符串形式
+        include:
+          - health
+          - info
+          - mappings
+          - env
+        # 开发全部节点
+#        include: "*"
   # 显示详细健康状态
   endpoint:
     health:
