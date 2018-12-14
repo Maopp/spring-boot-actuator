@@ -21,9 +21,13 @@ management:
           - info
           - mappings
           - env
+          - shutdown
         # 开发全部节点
-#        include: "*"
+        # include: "*"
   # 显示详细健康状态
   endpoint:
     health:
       showDetails: always
+    # 开启远程关闭服务
+    shutdown:
+      enabled: true

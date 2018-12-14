@@ -202,3 +202,43 @@ sessions	    允许从Spring Session支持的会话存储中检索和删除用�
 ## 总结
 通过本章学习可以知道你需要开发的节点了，根据具体的业务需求开放不同的节点。
 注意：节点开放一定要慎重，不要过度开放接口，也不要盲目填写*开放全部节点。
+
+
+------------------------------------------------------------------------------------------------------------------------
+# Actuator远程关闭服务"黑科技"：
+
+## 学习目标：通过配置Actuator完成服务远程关闭。
+
+## 配置远程关闭服务
+由于Autuator内置了远程关闭服务功能，所以可以很简单的开启这一项“黑科技”,修改application.yml配置文件，如下所示：
+    # 管理节点配置
+    management:
+      endpoints:
+        web:
+          # actuator的前缀地址
+          base-path: /
+          # 开放指定节点
+          exposure:
+            include:
+              - health
+              - info
+              - mappings
+              - env
+              - shutdown
+        # 开启远程关闭服务
+        shutdown:
+          enabled: true
+通过management.endpoint.shutdown.enabled参数来进行设置，默认为false，默认不会开启远程关闭服务功能，然后把shutdown节点进
+行开放，否则无法发送远程关机请求。
+
+## 测试：
+打开终端或者postman工具进行测试关机请求，如下是终端命令测试结果：
+    curl -X POST http://localhost:8085/shutdown
+通过curl命令发送POST请求类型到http://localhost:8085/shutdown，发送完成后会响应一段信息：
+    {"message":"Shutting down, bye..."}
+
+## 总结
+本章配置比较简单，通过修改两个地方开启了远程关闭服务的操作。
+不过建议没事不要打开，打开后也不要对公网开放，黑科技都是比较危险的。
+spring-configuration-metadata.json文件中对应属性名成为：endpoints.shutdown.enabled，但是这样配置访问不到，要配置：
+management.endpoint.shutdown.enabled属性才可以访问
