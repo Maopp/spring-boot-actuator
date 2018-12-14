@@ -9,6 +9,10 @@ server:
 management:
   endpoints:
     web:
+      # 自定义路径映射
+      path-mapping:
+        # key=>value形式，原映射路径=>新映射路径
+        health: healthcheck
       # actuator的前缀地址
       basePath: /
       # 开放指定节点
@@ -31,3 +35,6 @@ management:
     # 开启远程关闭服务
     shutdown:
       enabled: true
+  # 修改监控服务的端口号
+  server:
+    port: 8081
